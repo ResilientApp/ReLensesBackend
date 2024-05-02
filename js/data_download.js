@@ -99,13 +99,13 @@ export async function downloadData(querySize, startTime, endTime) {
         })
     };
   
-    async function bitqueryAPICall(){
+    async function bitqueryAPICall() {
       try {
         const result = await fetch(url, opts).then(res => res.json())
         console.log("data downloaded for", fileName)
         processJSON(result.data, fileName)
       } catch (error) {
-        console.log("failed download for", filename)
+        console.log("failed download for", fileName)
         console.log("error:", error)
       }
     }
