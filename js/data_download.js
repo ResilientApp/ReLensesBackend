@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { createTimeStr } from './date_mod.js';
 
-function saveJSON(jsonObj, outfile) {
+export function saveJSON(jsonObj, outfile) {
     jsonObj = JSON.stringify(jsonObj)
     fs.writeFile(outfile, jsonObj, 'utf8', () => {
         console.log(outfile, "file saved")

@@ -62,15 +62,16 @@ export function sendData(res, req, dir) {
         // console.log("printing files")
         // console.log(files)
         let jsonObjs = []
-        files.forEach(file => {
-            fs.readFile(dir + "/" + file, 'utf8', (err, txt) => {
+        let filesToRead = 10 // files.length
+        for(let i = 0; i < filesToRead; i++) {
+            fs.readFile(dir + "/" + files[i], 'utf8', (err, txt) => {
                 if(err) {
                     console.log("can't find file", file)
                 }
                 else {
                     let data = JSON.parse(txt)
                     jsonObjs.push(data)
-                    if(jsonObjs.length == files.length) {
+                    if(jsonObjs.length == filesToRead) {
                         // console.log("all files accounted for:", jsonObjs.length)
                         let dataOut = compoundData(jsonObjs)
                         res.status(200).send({
@@ -79,7 +80,25 @@ export function sendData(res, req, dir) {
                     }
                 }
             })
-        })
+        }
+        // files.forEach(file => {
+        //     fs.readFile(dir + "/" + file, 'utf8', (err, txt) => {
+        //         if(err) {
+        //             console.log("can't find file", file)
+        //         }
+        //         else {
+        //             let data = JSON.parse(txt)
+        //             jsonObjs.push(data)
+        //             if(jsonObjs.length == files.length) {
+        //                 // console.log("all files accounted for:", jsonObjs.length)
+        //                 let dataOut = compoundData(jsonObjs)
+        //                 res.status(200).send({
+        //                     data: dataOut
+        //                 })  
+        //             }
+        //         }
+        //     })
+        // })
     })
 
     // fs.readFile(sampleOut, 'utf8', (err, txt) => {
