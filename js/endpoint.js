@@ -17,35 +17,10 @@ function compoundData(jsonObjs) {
         users: users,
         transactions: transactions
     }
-    // console.log("compounded data")
-    // console.log("unique users:", users.length)
-    // console.log("num transactions:", transactions.length)
     return obj;
 }
 
-// fs.readdir(dataDir, (err, files) => {
-//     console.log("printing files")
-//     console.log(files)
-//     let jsonObjs = []
-//     files.forEach(file => {
-//         fs.readFile(dataDir + "/" + file, 'utf8', (err, txt) => {
-//             if(err) {
-//                 console.log("can't find file", file)
-//             }
-//             else {
-//                 let data = JSON.parse(txt)
-//                 jsonObjs.push(data)
-//                 if(jsonObjs.length == files.length) {
-//                     console.log("all files accounted for:", jsonObjs.length)
-//                     compoundData(jsonObjs)
-//                 }
-//             }
-//         })
-//     })
-// })
-
-
-export function sendData(res, req, dir) {
+export function sendData_ETH(res, req, dir) {
     // query handle
     if(req.query) {
         if(req.query.start) {
@@ -59,10 +34,8 @@ export function sendData(res, req, dir) {
         if(err) {
             res.status(500).send('failed to read dir');
         }
-        // console.log("printing files")
-        // console.log(files)
         let jsonObjs = []
-        let filesToRead = 10 // files.length
+        let filesToRead = files.length
         for(let i = 0; i < filesToRead; i++) {
             fs.readFile(dir + "/" + files[i], 'utf8', (err, txt) => {
                 if(err) {
@@ -72,7 +45,6 @@ export function sendData(res, req, dir) {
                     let data = JSON.parse(txt)
                     jsonObjs.push(data)
                     if(jsonObjs.length == filesToRead) {
-                        // console.log("all files accounted for:", jsonObjs.length)
                         let dataOut = compoundData(jsonObjs)
                         res.status(200).send({
                             data: dataOut
@@ -81,44 +53,19 @@ export function sendData(res, req, dir) {
                 }
             })
         }
-        // files.forEach(file => {
-        //     fs.readFile(dir + "/" + file, 'utf8', (err, txt) => {
-        //         if(err) {
-        //             console.log("can't find file", file)
-        //         }
-        //         else {
-        //             let data = JSON.parse(txt)
-        //             jsonObjs.push(data)
-        //             if(jsonObjs.length == files.length) {
-        //                 // console.log("all files accounted for:", jsonObjs.length)
-        //                 let dataOut = compoundData(jsonObjs)
-        //                 res.status(200).send({
-        //                     data: dataOut
-        //                 })  
-        //             }
-        //         }
-        //     })
-        // })
     })
+}
 
-    // fs.readFile(sampleOut, 'utf8', (err, txt) => {
-    //     if(err) {
-    //         res.status(500).send('failed to read file');
-    //     }
-    //     else {
-    //         res.status(200).send({
-    //             data: JSON.parse(txt)
-    //         })  
-    //     }
-    // })
-    // console.log("get")
-    // console.log(req.query)
-    // if(req.query) {
-    //     if(req.query.start) {
-    //         console.log(req.query.start)
-    //     }
-    //     if(req.query.end) {
-    //         console.log(req.query.end)
-    //     }
-    // }
+export function sendData_RESDB(res, req, file) {
+    fs.readFile(file, 'utf8', (err, txt) => {
+        if(err) {
+            console.log("can't find file", file)
+        }
+        else {
+            let data = JSON.parse(txt)
+            res.status(200).send({
+                data: data
+            })  
+        }
+    })
 }
