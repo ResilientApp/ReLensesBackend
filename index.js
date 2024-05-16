@@ -5,7 +5,7 @@ import express from 'express';
 import schedule from 'node-schedule';
 import cors from 'cors';
 import { downloadData_ETH } from './js/data_download_eth.js';
-import { createTimeStr } from './js/date_mod.js';
+import { createTimeStr, getTimeFromStr } from './js/date_mod.js';
 import { sendData_ETH, sendData_RESDB } from './js/endpoint.js';
 import axios from 'axios';
 import { downloadData_RESDB } from './js/data_download_resdb.js';
@@ -16,17 +16,6 @@ const ETH_QUERY_SIZE = 1000;
 
 const app = express();
 const PORT = 8080;
-const eventEmitter = new EventEmitter();
-
-eventEmitter.on('testEvent', () => {
-    console.log("hello world2")
-
-    fs.readFile('./testFile.txt', 'utf8', (err, txt) => {
-        console.log(txt)
-    })
-})
-
-eventEmitter.emit("testEvent")
 
 app.use(cors());
 
@@ -40,35 +29,65 @@ app.get('/getData_RESDB', (req, res) => {
 
 app.listen(
     PORT,
-    () => console.log(`live on localhost:${PORT}`)
+    () => console.log(`Live on localhost:${PORT}`)
 )
 
-async function getData_ETH() {
-    let endTime = new Date()
-    let MS_PER_MINUTE = 60000;
-    let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-    let fileName = "ETHDATA_" + createTimeStr(startTime)
-    fileName = fileName.replace(":00.000Z", "")
-    fileName = fileName.replace(":", "-") + ".json"
-    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
+function deleteOldFiles(keep, dir) {
+    fs.readdir(dir, (err, files) => {
+        if(err) {
+            res.status(500).send('failed to read dir');
+        }
+        files.sort((file1, file2) => {
+            let d1 = getTimeFromStr(file1.replace('ETHDATA_', '').replace('.json', ''))
+            let d2 = getTimeFromStr(file2.replace('ETHDATA_', '').replace('.json', ''))
+            return d1 - d2;
+        })
+        let amountToDelete = files.length - keep
+        if(amountToDelete <= 0) {
+            return;
+        }
+        for(let i = 0; i < amountToDelete; i++) {
+            console.log("deleting:", files[i])
+            fs.unlinkSync(dir + files[i])
+        }
+    })
 }
 
 // seconds - minute - hour ...
+
+// get eth data and only keep newest 48 files (1 day old)
 schedule.scheduleJob('0 */30 * * * *', () => {
     console.log("Downloading ETH data")
-    // getData_ETH();
+    let endTime = new Date()
+    let MS_PER_MINUTE = 60000;
+    let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
+    deleteOldFiles(48, './processedData/')
 })
 
 schedule.scheduleJob('0 0 */1 * * *', () => {
     console.log("Downloading RESDB data")
-    // downloadData_RESDB(RESDB_OUTFILE);
+    downloadData_RESDB(RESDB_OUTFILE);
 })
 
-function deleteFiles(range) {
-    
-}
+// schedule.scheduleJob('0 */1 * * * *', () => {
+//     // console.log("Downloading ETH data")
+//     // getData_ETH();
+//     let endTime = new Date()
+//     let MS_PER_MINUTE = 60000;
+//     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+//     let fileName = "ETHDATA_" + createTimeStr(startTime)
+//     fileName = fileName.replace(":00.000Z", "")
+//     fileName = fileName.replace(":", "-") + ".json"
+//     let jsonObj = {
+//         'test': startTime
+//     }
+//     jsonObj = JSON.stringify(jsonObj)
+//     fs.writeFile('./testData/' + fileName, jsonObj, 'utf8', () => {
+//         console.log(fileName, "file saved")
+//     })
 
-schedule.scheduleJob('0 */1 * * * *', () => {
-    console.log("Downloading ETH data")
-    // getData_ETH();
-})
+//     deleteOldFiles(10, './testData/')
+// })
+
+// fs.unlinkSync('./testData/sample2.json')

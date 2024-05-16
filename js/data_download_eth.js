@@ -35,17 +35,17 @@ function processJSON_ETH(data1, outfile) {
     saveJSON(obj, outfile)
 }
 
-async function getData() {
-    let endTime = new Date()
-    let MS_PER_MINUTE = 60000;
-    let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-    let fileName = "ETHDATA_" + createTimeStr(startTime)
-    fileName = fileName.replace(":00.000Z", "")
-    fileName = fileName.replace(":", "-") + ".json"
-    console.log("Downloading data")
-    console.log(createTimeStr(startTime), createTimeStr(endTime))
-    downloadData(1000, startTime, endTime);
-}
+// async function getData() {
+//     let endTime = new Date()
+//     let MS_PER_MINUTE = 60000;
+//     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+//     let fileName = "ETHDATA_" + createTimeStr(startTime)
+//     fileName = fileName.replace(":00.000Z", "")
+//     fileName = fileName.replace(":", "-") + ".json"
+//     console.log("Downloading data")
+//     console.log(createTimeStr(startTime), createTimeStr(endTime))
+//     downloadData(1000, startTime, endTime);
+// }
 
 export async function downloadData_ETH(querySize, startTime, endTime) {
 
