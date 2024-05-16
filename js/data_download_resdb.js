@@ -11,7 +11,7 @@ function saveJSON(jsonObj, outfile) {
 function deleteBetweenTwoPhrases(str, phrase1, phrase2, newPhrase) {
     let index1 = str.indexOf(phrase1)
     let index2 = str.indexOf(phrase2, index1 + phrase1.length)
-    if(index1 == -1 || index2 == -1) {
+    if (index1 == -1 || index2 == -1) {
         return null
     }
     let substr = str.substring(index1, index2 + phrase2.length)
@@ -24,16 +24,16 @@ function processDataResDB(txt, outfile) {
     let numTrans = 0;
     let addresses = [];
     let transactions = [];
-    for(let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         let obj = data[i]
-        if(obj.inputs) {
-            if(obj.inputs[0].owners_before) {
-                if(obj.outputs) {
-                    if(obj.outputs[0].public_keys) {
-                        if(obj.outputs[0].amount) {
-                            if(obj.asset) {
-                                if(obj.asset.data) {
-                                    if(obj.asset.data.time) {
+        if (obj.inputs) {
+            if (obj.inputs[0].owners_before) {
+                if (obj.outputs) {
+                    if (obj.outputs[0].public_keys) {
+                        if (obj.outputs[0].amount) {
+                            if (obj.asset) {
+                                if (obj.asset.data) {
+                                    if (obj.asset.data.time) {
                                         let processedTrans = {
                                             from: obj.inputs[0].owners_before[0],
                                             to: obj.outputs[0].public_keys[0],
@@ -43,10 +43,10 @@ function processDataResDB(txt, outfile) {
                                         }
 
                                         transactions.push(processedTrans)
-                                        if(!addresses.includes(processedTrans.to)) {
+                                        if (!addresses.includes(processedTrans.to)) {
                                             addresses.push(processedTrans.to)
                                         }
-                                        if(!addresses.includes(processedTrans.from)) {
+                                        if (!addresses.includes(processedTrans.from)) {
                                             addresses.push(processedTrans.from)
                                         }
 
@@ -69,35 +69,44 @@ function processDataResDB(txt, outfile) {
 
 export async function downloadData_RESDB(outfile) {
     axios.get('https://crow.resilientdb.com/v1/transactions')
-    .then((response) => {
-      let datastr = response.data;
-      let canDel = true;
-      while(canDel) {
-          let newstr = deleteBetweenTwoPhrases(datastr, "-----BEGIN PUBLIC KEY-----", "{", "{")
-          if(newstr) {
-              datastr = newstr;
-          } else {
-              canDel = false
-          }
-      }
+        .then((response) => {
+            let datastr = response.data;
+            let canDel = true;
+            while (canDel) {
+                let newstr = deleteBetweenTwoPhrases(datastr, "-----BEGIN PUBLIC KEY-----", "{", "{")
+                if (newstr) {
+                    datastr = newstr;
+                } else {
+                    canDel = false
+                }
+            }
 
-      // fix weird inputs with empty
-      // ex: },b,{ => },{
-      let lastInd = 0;
-      while(lastInd >= 0) {
-          lastInd = datastr.indexOf('{\"inputs\"', lastInd)
-          let closerInd = datastr.lastIndexOf('},', lastInd)
-          if(closerInd > -1 && lastInd > -1) {
-              let gapstr = datastr.substring(closerInd, lastInd + '{"inputs:"'.length)
-              if(gapstr != '},{\"inputs\":') {
-                  datastr = datastr.replace(gapstr, '},{\"inputs\":');
-              }
-          }
-          if(lastInd != -1) {
-              lastInd += 1;
-          }
-      }
-  
-      processDataResDB(datastr, outfile);
-    });
+            // fix weird inputs with empty
+            // ex: },b,{ => },{
+            let lastInd = 0;
+            while (lastInd >= 0) {
+                lastInd = datastr.indexOf('{\"inputs\"', lastInd)
+                let closerInd = datastr.lastIndexOf('},', lastInd)
+                if (closerInd > -1 && lastInd > -1) {
+                    let gapstr = datastr.substring(closerInd, lastInd + '{"inputs:"'.length)
+                    if (gapstr != '},{\"inputs\":') {
+                        datastr = datastr.replace(gapstr, '},{\"inputs\":');
+                    }
+                }
+                if (lastInd != -1) {
+                    lastInd += 1;
+                }
+            }
+
+            let firstInput = datastr.indexOf('\"inputs\"')
+            let gapstr = datastr.substring(0, firstInput)
+            datastr = datastr.replace(gapstr, "[{")
+
+
+            // fs.writeFile("./preprocessedData_RESDB.json", datastr, 'utf8', () => {
+            //     console.log("./preprocessedData_RESDB.json", "file saved")
+
+            // })
+            processDataResDB(datastr, outfile);
+        });
 }

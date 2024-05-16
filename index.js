@@ -35,7 +35,7 @@ app.listen(
 function deleteOldFiles(keep, dir) {
     fs.readdir(dir, (err, files) => {
         if(err) {
-            res.status(500).send('failed to read dir');
+            console.log('failed to read dir:', dir);
         }
         files.sort((file1, file2) => {
             let d1 = getTimeFromStr(file1.replace('ETHDATA_', '').replace('.json', ''))
@@ -55,39 +55,20 @@ function deleteOldFiles(keep, dir) {
 
 // seconds - minute - hour ...
 
-// get eth data and only keep newest 48 files (1 day old)
+// get eth data every 30 min and only keep newest 48 files (1 day old)
 schedule.scheduleJob('0 */30 * * * *', () => {
     console.log("Downloading ETH data")
     let endTime = new Date()
     let MS_PER_MINUTE = 60000;
     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
     downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
-    deleteOldFiles(48, './processedData/')
+    deleteOldFiles(48, './processed_data/')
 })
 
+// get resdb data every hour
 schedule.scheduleJob('0 0 */1 * * *', () => {
     console.log("Downloading RESDB data")
     downloadData_RESDB(RESDB_OUTFILE);
 })
 
-// schedule.scheduleJob('0 */1 * * * *', () => {
-//     // console.log("Downloading ETH data")
-//     // getData_ETH();
-//     let endTime = new Date()
-//     let MS_PER_MINUTE = 60000;
-//     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-//     let fileName = "ETHDATA_" + createTimeStr(startTime)
-//     fileName = fileName.replace(":00.000Z", "")
-//     fileName = fileName.replace(":", "-") + ".json"
-//     let jsonObj = {
-//         'test': startTime
-//     }
-//     jsonObj = JSON.stringify(jsonObj)
-//     fs.writeFile('./testData/' + fileName, jsonObj, 'utf8', () => {
-//         console.log(fileName, "file saved")
-//     })
-
-//     deleteOldFiles(10, './testData/')
-// })
-
-// fs.unlinkSync('./testData/sample2.json')
+// downloadData_RESDB(RESDB_OUTFILE);
