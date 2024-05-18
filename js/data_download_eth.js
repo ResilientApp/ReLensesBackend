@@ -54,7 +54,7 @@ export async function downloadData_ETH(querySize, startTime, endTime) {
     let startTimeStr = createTimeStr(startTime);
     let endTimeStr = createTimeStr(endTime);
 
-    console.log(startTimeStr, endTimeStr)
+    // console.log(startTimeStr, endTimeStr)
 
     let fileName = dir + "ETHDATA_" + createTimeStr(startTimeStr)
     fileName = fileName.replace(":00.000Z", "")

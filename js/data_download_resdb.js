@@ -108,5 +108,7 @@ export async function downloadData_RESDB(outfile) {
 
             // })
             processDataResDB(datastr, outfile);
+        }).catch((error) => {
+            console.log("Couldn't get, error code:", error.code)
         });
 }

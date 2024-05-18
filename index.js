@@ -70,5 +70,3 @@ schedule.scheduleJob('0 0 */1 * * *', () => {
     console.log("Downloading RESDB data")
     downloadData_RESDB(RESDB_OUTFILE);
 })
-
-// downloadData_RESDB(RESDB_OUTFILE);
