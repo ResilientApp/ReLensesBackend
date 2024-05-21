@@ -53,14 +53,14 @@ function deleteOldFiles(keep, dir) {
 // seconds - minute - hour ...
 
 // get eth data every 30 min and only keep newest 48 files (1 day old)
-// schedule.scheduleJob('0 */30 * * * *', () => {
-//     console.log("Downloading ETH data")
-//     let endTime = new Date()
-//     let MS_PER_MINUTE = 60000;
-//     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-//     downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
-//     deleteOldFiles(48, './processed_data/')
-// })
+schedule.scheduleJob('0 */30 * * * *', () => {
+    console.log("Downloading ETH data")
+    let endTime = new Date()
+    let MS_PER_MINUTE = 60000;
+    let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
+    deleteOldFiles(48, './processed_data/')
+})
 
 // get resdb data every hour
 schedule.scheduleJob('0 0 */1 * * *', () => {
