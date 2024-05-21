@@ -101,13 +101,8 @@ export async function downloadData_RESDB(outfile) {
             let firstInput = datastr.indexOf('\"inputs\"')
             let gapstr = datastr.substring(0, firstInput)
             datastr = datastr.replace(gapstr, "[{")
-
-
-            // fs.writeFile("./preprocessedData_RESDB.json", datastr, 'utf8', () => {
-            //     console.log("./preprocessedData_RESDB.json", "file saved")
-
-            // })
             processDataResDB(datastr, outfile);
+            
         }).catch((error) => {
             console.log("Couldn't get, error code:", error.code)
         });

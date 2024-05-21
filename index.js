@@ -1,13 +1,10 @@
-
-import { EventEmitter } from 'events';
 import fs from 'fs';
 import express from 'express';
 import schedule from 'node-schedule';
 import cors from 'cors';
 import { downloadData_ETH } from './js/data_download_eth.js';
-import { createTimeStr, getTimeFromStr } from './js/date_mod.js';
+import { getTimeFromStr } from './js/date_mod.js';
 import { sendData_ETH, sendData_RESDB } from './js/endpoint.js';
-import axios from 'axios';
 import { downloadData_RESDB } from './js/data_download_resdb.js';
 
 const DATA_DIR = "processed_data";
@@ -56,14 +53,14 @@ function deleteOldFiles(keep, dir) {
 // seconds - minute - hour ...
 
 // get eth data every 30 min and only keep newest 48 files (1 day old)
-schedule.scheduleJob('0 */30 * * * *', () => {
-    console.log("Downloading ETH data")
-    let endTime = new Date()
-    let MS_PER_MINUTE = 60000;
-    let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
-    deleteOldFiles(48, './processed_data/')
-})
+// schedule.scheduleJob('0 */30 * * * *', () => {
+//     console.log("Downloading ETH data")
+//     let endTime = new Date()
+//     let MS_PER_MINUTE = 60000;
+//     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+//     downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
+//     deleteOldFiles(48, './processed_data/')
+// })
 
 // get resdb data every hour
 schedule.scheduleJob('0 0 */1 * * *', () => {
