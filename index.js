@@ -7,8 +7,13 @@ import { downloadData_ETH } from './js/data_download_eth.js';
 import { getTimeFromStr } from './js/date_mod.js';
 import { sendData_ETH, sendData_RESDB } from './js/endpoint.js';
 import { downloadData_RESDB } from './js/data_download_resdb.js';
+import { fileURLToPath } from 'url';
 
-const DATA_DIR = "processed_data";
+// Convert the URL path of the current module to a file path:
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const DATA_DIR = path.join(__dirname, "processed_data");
 const RESDB_OUTFILE = path.join(__dirname, 'resDB_data.json');
 const ETH_QUERY_SIZE = 1000;
 
