@@ -36,16 +36,15 @@ function processJSON_ETH(data1, outfile) {
     saveJSON(obj, outfile)
 }
 
-export async function downloadData_ETH(querySize, startTime, endTime) {
-
-    const dir = './processed_data/'
+export async function downloadData_ETH(querySize, startTime, endTime, dir) {
 
     let startTimeStr = createTimeStr(startTime);
     let endTimeStr = createTimeStr(endTime);
     
-    let fileName = dir + "ETHDATA_" + createTimeStr(startTimeStr)
+    let fileName = "ETHDATA_" + createTimeStr(startTimeStr)
     fileName = fileName.replace(":00.000Z", "")
     fileName = fileName.replace(":", "-") + ".json"
+    fileName = dir + fileName
 
     const apiKey = "BQYd0rsSmffBzkLkUs5bJkqCPlHKZPiz"
   

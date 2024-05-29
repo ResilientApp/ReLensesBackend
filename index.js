@@ -69,8 +69,8 @@ schedule.scheduleJob('0 */30 * * * *', () => {
     let endTime = new Date()
     let MS_PER_MINUTE = 60000;
     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
-    deleteOldFiles(48, './processed_data/')
+    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime, DATA_DIR);
+    deleteOldFiles(48, DATA_DIR)
 })
 
 // get resdb data every hour
