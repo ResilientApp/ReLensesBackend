@@ -2,13 +2,14 @@ import fs from 'fs';
 import express from 'express';
 import schedule from 'node-schedule';
 import cors from 'cors';
+import path from 'path'
 import { downloadData_ETH } from './js/data_download_eth.js';
 import { getTimeFromStr } from './js/date_mod.js';
 import { sendData_ETH, sendData_RESDB } from './js/endpoint.js';
 import { downloadData_RESDB } from './js/data_download_resdb.js';
 
-const DATA_DIR = "processed_data";
-const RESDB_OUTFILE = 'resDB_data.json';
+const DATA_DIR = path.join(__dirname, "processed_data");
+const RESDB_OUTFILE = path.join(__dirname, 'resDB_data.json');
 const ETH_QUERY_SIZE = 1000;
 
 const app = express();
