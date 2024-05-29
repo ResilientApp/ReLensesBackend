@@ -8,7 +8,7 @@ import { sendData_ETH, sendData_RESDB } from './js/endpoint.js';
 import { downloadData_RESDB } from './js/data_download_resdb.js';
 
 const DATA_DIR = "processed_data";
-const RESDB_OUTFILE = './resDB_data.json';
+const RESDB_OUTFILE = 'resDB_data.json';
 const ETH_QUERY_SIZE = 1000;
 
 const app = express();
@@ -67,3 +67,5 @@ schedule.scheduleJob('0 0 */1 * * *', () => {
     console.log("Downloading RESDB data")
     downloadData_RESDB(RESDB_OUTFILE);
 })
+
+// downloadData_RESDB(RESDB_OUTFILE);

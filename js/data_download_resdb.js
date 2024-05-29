@@ -69,9 +69,24 @@ function processDataResDB(txt, outfile) {
 
 export async function downloadData_RESDB(outfile) {
     axios.get('https://crow.resilientdb.com/v1/transactions')
+    // fetch("https://crow.resilientdb.com/v1/transactions")
         .then((response) => {
+            // console.log(response.body)
             let datastr = response.data;
+
+            // saveJSON(datastr, "./resDB_data_raw.json")
+
             let canDel = true;
+            while (canDel) {
+                let newstr = deleteBetweenTwoPhrases(datastr, "\"-----BEGIN PUBLIC KEY-----", "{", "{")
+                if (newstr) {
+                    datastr = newstr;
+                } else {
+                    canDel = false
+                }
+            }
+
+            canDel = true;
             while (canDel) {
                 let newstr = deleteBetweenTwoPhrases(datastr, "-----BEGIN PUBLIC KEY-----", "{", "{")
                 if (newstr) {
@@ -98,12 +113,33 @@ export async function downloadData_RESDB(outfile) {
                 }
             }
 
+            // let lastInd = 0;
+            // while (lastInd >= 0) {
+            //     lastInd = datastr.indexOf('{\"inputs\"', lastInd)
+            //     let closerInd = datastr.lastIndexOf('\"id\"', lastInd)
+            //     if (closerInd > -1 && lastInd > -1) {
+            //         let gapstr = datastr.substring(closerInd, lastInd + '{"inputs:"'.length)
+            //         // if (gapstr != '},{\"inputs\":') {
+            //         //     datastr = datastr.replace(gapstr, '},{\"inputs\":');
+            //         // }
+            //         datastr = datastr.replace(gapstr, '\"id\":0},{\"inputs\":');
+            //     }
+            //     if (lastInd != -1) {
+            //         lastInd += 1;
+            //     }
+            // }
+
             let firstInput = datastr.indexOf('\"inputs\"')
             let gapstr = datastr.substring(0, firstInput)
             datastr = datastr.replace(gapstr, "[{")
+
+            // fs.writeFile("./resDB_data_str.json", datastr, 'utf8', () => {
+            //     console.log("./resDB_data_str.json", "file saved")
+            // })
+
             processDataResDB(datastr, outfile);
             
         }).catch((error) => {
-            console.log("Couldn't get, error code:", error.code)
+            console.log("Couldn't get, error:", error)
         });
 }

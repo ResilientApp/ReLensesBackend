@@ -37,7 +37,7 @@ export function sendData_ETH(res, req, dir) {
         let jsonObjs = []
         let filesToRead = files.length
         for(let i = 0; i < filesToRead; i++) {
-            fs.readFile(dir + "/" + files[i], 'utf8', (err, txt) => {
+            fs.readFile(dir + "\\" + files[i], 'utf8', (err, txt) => {
                 if(err) {
                     console.log("can't find file", file)
                 }
