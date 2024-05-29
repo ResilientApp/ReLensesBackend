@@ -12,7 +12,7 @@ const RESDB_OUTFILE = 'resDB_data.json';
 const ETH_QUERY_SIZE = 1000;
 
 const app = express();
-const PORT = 8080;
+const PORT = 3080;
 
 app.use(cors());
 
@@ -67,5 +67,3 @@ schedule.scheduleJob('0 0 */1 * * *', () => {
     console.log("Downloading RESDB data")
     downloadData_RESDB(RESDB_OUTFILE);
 })
-
-// downloadData_RESDB(RESDB_OUTFILE);
