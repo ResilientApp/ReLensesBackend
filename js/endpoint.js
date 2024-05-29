@@ -35,6 +35,8 @@ export function sendData_ETH(res, req, dir) {
             res.status(500).send('failed to read dir');
         }
         let jsonObjs = []
+        console.log("dir:" + dir)
+        console.log("files:" + files)
         let filesToRead = files.length
         for(let i = 0; i < filesToRead; i++) {
             fs.readFile(dir + files[i], 'utf8', (err, txt) => {

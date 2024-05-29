@@ -20,6 +20,8 @@ const DATA_DIR = path.join(__dirname, "processed_data\\");
 const RESDB_OUTFILE = path.join(__dirname, 'resDB_data.json');
 const ETH_QUERY_SIZE = 1000;
 
+console.log("Data dir: " + DATA_DIR)
+
 const app = express();
 const PORT = 3080;
 
