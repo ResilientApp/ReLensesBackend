@@ -2,13 +2,22 @@ import fs from 'fs';
 import express from 'express';
 import schedule from 'node-schedule';
 import cors from 'cors';
+import path from 'path'
 import { downloadData_ETH } from './js/data_download_eth.js';
 import { getTimeFromStr } from './js/date_mod.js';
 import { sendData_ETH, sendData_RESDB } from './js/endpoint.js';
 import { downloadData_RESDB } from './js/data_download_resdb.js';
+import { fileURLToPath } from 'url';
 
-const DATA_DIR = "processed_data\\";
-const RESDB_OUTFILE = 'resDB_data.json';
+// const DATA_DIR = "processed_data\\";
+// const RESDB_OUTFILE = 'resDB_data.json';
+
+// Convert the URL path of the current module to a file path:
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const DATA_DIR = path.join(__dirname, "processed_data\\");
+const RESDB_OUTFILE = path.join(__dirname, 'resDB_data.json');
 const ETH_QUERY_SIZE = 1000;
 
 const app = express();
@@ -53,14 +62,14 @@ function deleteOldFiles(keep, dir) {
 // seconds - minute - hour ...
 
 // get eth data every 30 min and only keep newest 48 files (1 day old)
-// schedule.scheduleJob('0 */30 * * * *', () => {
-//     console.log("Downloading ETH data")
-//     let endTime = new Date()
-//     let MS_PER_MINUTE = 60000;
-//     let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
-//     downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
-//     deleteOldFiles(48, './processed_data/')
-// })
+schedule.scheduleJob('0 */30 * * * *', () => {
+    console.log("Downloading ETH data")
+    let endTime = new Date()
+    let MS_PER_MINUTE = 60000;
+    let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+    downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime);
+    deleteOldFiles(48, './processed_data/')
+})
 
 // get resdb data every hour
 schedule.scheduleJob('0 0 */1 * * *', () => {

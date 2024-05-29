@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { createTimeStr } from './date_mod.js';
+import fetch from 'node-fetch';
 
 function saveJSON(jsonObj, outfile) {
     jsonObj = JSON.stringify(jsonObj)
