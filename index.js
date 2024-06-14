@@ -20,7 +20,7 @@ const DATA_DIR = path.join(__dirname, "processed_data/");
 const RESDB_OUTFILE = path.join(__dirname, 'resDB_data.json');
 const ETH_QUERY_SIZE = 1000;
 
-console.log("Data dir: " + DATA_DIR)
+// console.log("Data dir: " + DATA_DIR)
 
 const app = express();
 const PORT = 3080;
@@ -78,3 +78,10 @@ schedule.scheduleJob('0 0 */1 * * *', () => {
     console.log("Downloading RESDB data")
     downloadData_RESDB(RESDB_OUTFILE);
 })
+
+console.log("Downloading ETH data")
+let endTime = new Date()
+let MS_PER_MINUTE = 60000;
+let startTime = new Date(endTime - 30 * MS_PER_MINUTE)
+downloadData_ETH(ETH_QUERY_SIZE, startTime, endTime, DATA_DIR);
+deleteOldFiles(48, DATA_DIR)
