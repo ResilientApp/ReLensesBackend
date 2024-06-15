@@ -2,8 +2,9 @@
 
 ## Links
 
-Blog: [https://blog.resilientdb.com/2024/05/21/ResLenses.html](https://blog.resilientdb.com/2024/05/21/ResLenses.html)
-Demo Video [https://www.youtube.com/watch?v=IzGxG4_WkDQ](https://www.youtube.com/watch?v=IzGxG4_WkDQ)
+- Blog: [https://blog.resilientdb.com/2024/05/21/ResLenses.html](https://blog.resilientdb.com/2024/05/21/ResLenses.html)
+- Demo Video: [https://www.youtube.com/watch?v=IzGxG4_WkDQ](https://www.youtube.com/watch?v=IzGxG4_WkDQ)
+- Front-End repo: [https://github.com/ResilientApp/ReLensesBackend](https://github.com/ResilientApp/ReLensesBackend)
 
 ## Create an API key
 
